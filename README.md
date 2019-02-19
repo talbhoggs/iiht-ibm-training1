@@ -12,3 +12,7 @@ This is assignment number 1 for the [IIHT](https://iiht.com/)/IBM Java fullstack
 
 * **Date submitted** : February 20, 2019
 * **Training date** : December 2018 - ongoing
+
+## Screenshots
+
+![alt text](pic1.png)
