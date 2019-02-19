@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <title>IIHTIBM</title>
+    <style>
+
+ /* Custom page CSS
+        -------------------------------------------------- */
+        /* Not required for template or sticky footer method. */
+
+        
+        
+        .bd-placeholder-img {
+          font-size: 1.125rem;
+          text-anchor: middle;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+  
+        @media (min-width: 768px) {
+          .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+          }
+        }
+
+        main > .container {
+            padding: 80px 15px 0;
+        }
+
+        .footer {
+        background-color: #f5f5f5;
+        }
+
+        .footer > .container {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        code {
+            font-size: 80%;
+        }
+
+
+        .progress-bar {
+            background-color: whiteSmoke;
+            border-radius: 2px;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+
+            width: 250px;
+            height: 20px;
+            
+            position: relative;
+            display: block;
+        }
+        
+        .progress-bar > span {
+            background-color: blue;
+            border-radius: 2px;
+
+            display: block;
+            text-indent: -9999px;
+        }
+
+        .list-group-item a:hover, .far, .fas {
+            cursor: pointer;
+        }
+
+      </style>
+  </head>
+    <body class="d-flex flex-column h-100">
+        <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">IIHTIBM Video Player</a>
+      </nav>
+    </header>
+    
+    <!-- Begin page content -->
+    <main role="main" class="flex-shrink-0">
+
+      <div class="container">
+            <div class="row justify-content-md-center">
+                    <div class="col">
+                            <video id="myVideoPlayer" width="560" height="315">
+                               
+                                Your browser does not support HTML5 video.
+                            </video>
+                            <br />
+                            <button id="play"><i class="fas fa-play-circle fa-lg"  ></i></button>
+                            <button id="pause" disabled><i class="fas fa-pause-circle fa-lg"></i></button> 
+                            <button id="increaseVolume"><i class="fas fa-plus-square fa-lg"></i></button> 
+                            <button id="decreaseVolume"><i class="fas fa-minus-square fa-lg"></i></button>
+                            <button id="reload"><i class="fas fa-redo-alt fa-lg"></i></button>
+                            <button id="mute"><i class="fas fa-headphones-alt fa-lg"></i></button> 
+                            <div style="float:right">
+                                <i class="far fa-thumbs-up fa-lg" onclick="likeFunction()"></i>&nbsp;<span id="like">0</span>&nbsp;
+                                <i class="fas fa-thumbs-down fa-lg" onclick="unLikeFunction()"></i>&nbsp;<span id="unlike">0</span>
+                            </div>
+                            <br />
+                            <br />
+                            <progress style="width:100%" id='progress-bar' min='0' max='100' value='0'></progress>
+                    </div>
+                    <br />
+                    <div class="col">
+                        <h3>My Playlist</h3>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item list-group-item-action"><a style="display:block;" onclick="loadVideo('lesson1.webm');myVideoPlayer.play();"><i class="fas fa-play-circle"></i> Lesson 1</a></li>
+                            <li class="list-group-item list-group-item-action"><a style="display:block;" onclick="loadVideo('lesson2.webm');myVideoPlayer.play();"><i class="fas fa-play-circle"></i> Lesson 2</a></li>
+                        </ul>
+                        <div class="alert alert-danger" role="alert">
+                            <strong><u>UI Assignment - 1 JAVA</u></strong>
+                            <br />
+                            Developed by :
+                            <br />
+                            Charles Amper
+                            <br />amperca@ph.ibm.com
+                        </div>
+                    </div>
+
+ 
+                </div>
+      </div>
+    </main>
+
+    <script>
+
+        const increaseVolume = increaseVolume => myVideoPlayer.volume += 0.2;
+        const decreaseVolume = decreaseVolume => myVideoPlayer.volume -= 0.2;
+
+        const mute = mute => !myVideoPlayer.muted ? myVideoPlayer.muted = true : myVideoPlayer.muted = false;
+
+        const play = play => {
+            if(myVideoPlayer.paused) {
+                myVideoPlayer.play();
+                disablePlayButton();
+            } else {
+                myVideoPlayer.pause();
+                disablePauseButton();
+            }
+        }
+
+        const pause = pause => {
+            play(); 
+        }
+
+        const disablePlayButton = disablePlayButton => {
+            document.getElementById("play").disabled = true;
+            document.getElementById("pause").disabled = false;
+        }
+
+        const disablePauseButton = disablePauseButton => {
+            document.getElementById("pause").disabled = true;
+            document.getElementById("play").disabled = false;
+        }
+
+        const updateProgressBar = updateProgressBar => {
+            let progressBar = document.getElementById('progress-bar');
+            let percentage = Math.floor((100 / myVideoPlayer.duration) * myVideoPlayer.currentTime);
+            progressBar.value = !isNaN(percentage) ? percentage : 0;
+        }
+
+        const getSelectedTitleObj = getSelectedTitleObj => {
+            let name = localStorage.getItem("selectedTitle");
+            let item = localStorage.getItem(name);
+            item = JSON.parse(item);
+            return item;
+        }
+
+        const getSelectedTitleStr = getSelectedTitleStr => {
+            let name = localStorage.getItem("selectedTitle");
+            return name;
+        }
+
+        const likeFunction = likeFunction => {
+            let item = getSelectedTitleObj();
+            item.like = parseInt(item.like) + 1;
+            document.getElementById("like").innerHTML = item.like;
+            localStorage.setItem(getSelectedTitleStr(), JSON.stringify(item));
+        }
+
+        const unLikeFunction = unLikeFunction => {
+            let item = getSelectedTitleObj();
+            item.unlike = parseInt(item.unlike) + 1;
+            document.getElementById("unlike").innerHTML = item.unlike;
+            localStorage.setItem(getSelectedTitleStr(), JSON.stringify(item));
+        }
+
+        const loadLikeUnLikeObjts = loadLikeUnLikeObjts => {
+            let item = getSelectedTitleObj();
+            document.getElementById("like").innerHTML = item.like;
+            document.getElementById("unlike").innerHTML = item.unlike;
+        }
+
+        const reload = reLoad => {
+            let name = localStorage.getItem("selectedTitle");
+            loadVideo(name + ".webm");
+            myVideoPlayer.play();
+        }
+       
+        function loadVideo(video) {
+            var fileName = video.split('.')[0];
+            myVideoPlayer.src = "videos/\//" + video;
+
+            
+            myVideoPlayer.onloadedmetadata = function() {
+               track = document.createElement("track");
+                track.kind = "captions";
+                track.label = "English";
+                track.srclang = "en";
+                track.src = "videos/"+fileName+".vtt";
+                track.addEventListener("load", function() {
+                    this.mode = "showing";
+                    myVideoPlayer.textTracks[0].mode = "showing";
+                });
+                this.appendChild(track);
+            }
+            
+            myVideoPlayer.load();
+            
+            //myVideoPlayer.play();
+            localStorage.setItem("selectedTitle", fileName);
+            loadLikeUnLikeObjts();
+        }
+
+        const initializeStorageObjts = initializeStorageObjts => {
+            localStorage.setItem("selectedTitle", "");
+            localStorage.setItem('lesson1', JSON.stringify({"like" : 0, "unlike" : 0}));
+            localStorage.setItem('lesson2', JSON.stringify({"like" : 0, "unlike" : 0}));
+        }
+
+        // main function
+        const onLoad = onLoad => {
+            initializeStorageObjts();
+            loadVideo('lesson1.webm');
+        }
+
+        document.getElementById("play").addEventListener('click', play, false);
+        document.getElementById("pause").addEventListener('click', pause, false);
+        document.getElementById("increaseVolume").addEventListener('click', increaseVolume, false);
+        document.getElementById("decreaseVolume").addEventListener('click', decreaseVolume, false);
+        document.getElementById("reload").addEventListener('click', reload, false);
+        document.getElementById("mute").addEventListener('click', mute, false);
+
+        myVideoPlayer.addEventListener('timeupdate', updateProgressBar, false);
+
+        window.addEventListener("load", onLoad , false);
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
