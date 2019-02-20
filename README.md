@@ -16,3 +16,5 @@ This is assignment number 1 for the [IIHT](https://iiht.com/)/IBM Java fullstack
 ## Screenshots
 
 ![alt text](pic1.png)
+
+![alt text](pic2.png)
